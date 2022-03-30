@@ -1,5 +1,7 @@
+# ignore cores
+core*
 # ignore container-related files
 .devcontainer/
 .vscode/
-#ignore token file
+# ignore token file
 token.txt
