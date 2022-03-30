@@ -21,6 +21,11 @@ from sklearn.gaussian_process.kernels import RBF, DotProduct, Matern, RationalQu
 # Load dataset
 Dataset = pd.read_csv("data/UD_867_formulation_training.csv")
 TARGETS = ['Water_Absorption_%','Hardness','Thermal_Conductivity_(mW/m.K)']
+NR_FEATURES = ['Clarifier_1','Clarifier_2','Clarifier_3',
+                'Polymer_3','UV_absorber_1','UV_absorber_2',
+                'Filler_2','Filler_3']
+TRAINING_OPTION = 'partial' # if remove 'partial'
+
 # %%
 # Reproducibility
 SEED = 12345
@@ -28,6 +33,9 @@ SEED = 12345
 X_train = Dataset.drop(columns=['name']+TARGETS)
 # add entropy as a feature
 X_train['entropy']=scipy.stats.entropy(X_train, axis=1)
+# removing some features may help?
+if TRAINING_OPTION == 'partial':
+    X_train = X_train.drop(columns=NR_FEATURES)
 # Select only targets from dataset
 Y_train = Dataset[TARGETS]
 # Standardization
@@ -125,7 +133,7 @@ def nested_cv(X,y,models,SEED):
     """Nested cross-validation procedure for model selection"""
     metrics_name = ['r2', 'neg_mean_absolute_error', 'neg_root_mean_squared_error']
     metrics = [r2_score, mean_absolute_error, mean_squared_error]
-    file_output = open(y.name.split('_')[0]+'.txt', 'w')
+    file_output = open(y.name.split('_')[0]+'_'+TRAINING_OPTION+'.txt', 'w')
     stats = {}
     for m_i in models:
         # stats = []
@@ -147,7 +155,7 @@ def nested_cv(X,y,models,SEED):
             # define search space
             space = models[m_i]
             # define search
-            search = GridSearchCV(model, space, scoring='r2', cv=cv_inner, refit=True)
+            search = GridSearchCV(model, space, scoring='r2', cv=cv_inner, refit=True, n_jobs=-1)
             # execute search
             result = search.fit(X_train, y_train)
             # get the best performing model fit on the whole training set
@@ -172,3 +180,10 @@ results = {}
 for target in TARGETS:
     y_train = Y_train[target]
     results[target]=nested_cv(X_train,y_train,models,SEED)
+
+# %%
+pd.DataFrame.from_dict({(i,j): results[i][j] 
+                           for i in results.keys() 
+                           for j in results[i].keys()},
+                       orient='index').to_csv('results_partialdataset.csv')
+# %%
