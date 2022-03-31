@@ -18,4 +18,4 @@ scipy==1.7.0
 torch==1.11.0
 tqdm==4.63.1
 xgboost
-keras
+tensorflow

@@ -9,13 +9,13 @@ import matplotlib.cm as cm
 import scipy
 from sklearn.linear_model import ElasticNet, Ridge, Lasso, LinearRegression
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
-from sklearn.model_selection import KFold, cross_val_score
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import GridSearchCV
 from xgboost.sklearn import XGBRegressor
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, DotProduct, Matern, RationalQuadratic, WhiteKernel
+
 
 #%%
 # Load dataset

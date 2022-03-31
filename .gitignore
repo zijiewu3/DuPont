@@ -4,5 +4,4 @@ core*
 Dockerfile
 .devcontainer/
 .vscode/
-# ignore token file
-token.txt
+
