@@ -11,7 +11,7 @@ from sklearn.linear_model import ElasticNet, Ridge, Lasso, LinearRegression
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import GridSearchCV, KFold
 from xgboost.sklearn import XGBRegressor
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, DotProduct, Matern, RationalQuadratic, WhiteKernel
@@ -24,7 +24,7 @@ TARGETS = ['Water_Absorption_%','Hardness','Thermal_Conductivity_(mW/m.K)']
 NR_FEATURES = ['Clarifier_1','Clarifier_2','Clarifier_3',
                 'Polymer_3','UV_absorber_1','UV_absorber_2',
                 'Filler_2','Filler_3']
-TRAINING_OPTION = 'partial' # if remove 'partial'
+TRAINING_OPTION = 'full' # if remove 'partial'
 
 # %%
 # Reproducibility
@@ -185,5 +185,5 @@ for target in TARGETS:
 pd.DataFrame.from_dict({(i,j): results[i][j] 
                            for i in results.keys() 
                            for j in results[i].keys()},
-                       orient='index').to_csv('results_partialdataset.csv')
+                       orient='index').to_csv('results_'+TRAINING_OPTION+'_dataset.csv')
 # %%
