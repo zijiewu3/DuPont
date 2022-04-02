@@ -15,16 +15,19 @@ from sklearn.model_selection import GridSearchCV, KFold
 from xgboost.sklearn import XGBRegressor
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, DotProduct, Matern, RationalQuadratic, WhiteKernel
-
-
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
+import warnings
 #%%
+warnings.filterwarnings("ignore")
 # Load dataset
 Dataset = pd.read_csv("data/UD_867_formulation_training.csv")
 TARGETS = ['Water_Absorption_%','Hardness','Thermal_Conductivity_(mW/m.K)']
 NR_FEATURES = ['Clarifier_1','Clarifier_2','Clarifier_3',
                 'Polymer_3','UV_absorber_1','UV_absorber_2',
                 'Filler_2','Filler_3']
-TRAINING_OPTION = 'full' # if remove 'partial'
+TRAINING_OPTION = 'partial' # if remove 'partial'
 
 # %%
 # Reproducibility
@@ -43,8 +46,19 @@ mu = X_train.mean(axis=0)
 sigma = X_train.std(axis=0)
 X_train = (X_train - mu)/sigma
 y_train = Y_train[TARGETS[0]]
+
 # %%
 models =    {
+    # Neural network regressor
+    'NeuralNetRegressor':{
+            'input_dim': [X_train.shape[1]],
+            'initializer': ['normal', 'uniform'],
+            'activation': ['relu', 'sigmoid'],
+            'optimizer': ['adam', 'rmsprop'],
+            'loss': ['mse', 'mae'],
+            'batch_size': [10, 20],
+            'epochs': [5, 10],
+    },
     # Similarity-based regressors
     'KNeighborsRegressor':{
             # 'n_neighbors': np.arange(1,3,2),
@@ -61,7 +75,7 @@ models =    {
     # Tree-based regressors
     'XGBRegressor':{
             'learning_rate': np.arange(0.025,0.150,0.025),
-            # 'gamma':np.arange(0.05,0.45,0.05),
+            'gamma':np.arange(0.05,0.45,0.05),
             # 'max_depth':np.arange(2,14,2),
             # 'min_child_weight':np.arange(1,8,1),
             'n_estimators':np.arange(10,80,5),
@@ -96,10 +110,20 @@ models =    {
 
             }
 # %%
+def NeuralNetRegressor(input_dim=29, initializer='uniform', activation='relu', optimizer='adam', loss='mse'):
+    model = Sequential()
+    model.add(Dense(units=10, input_dim=input_dim, kernel_initializer=initializer, activation=activation))
+    model.add(Dense(units=10, kernel_initializer=initializer, activation=activation))
+    model.add(Dense(1, kernel_initializer=initializer))
+    model.compile(loss=loss, optimizer=optimizer)
+    return model
+# %%
 def set_model(name):
     """Initialization module for models to be evaluated"""
+    if name=='NeuralNetRegressor':
+        model = KerasRegressor(NeuralNetRegressor, verbose=0)
     # Similarity-based regressors
-    if name=='KNeighborsRegressor':
+    elif name=='KNeighborsRegressor':
         model = KNeighborsRegressor()
     elif name=='GaussianProcessRegressor':
         model = GaussianProcessRegressor()    
@@ -133,7 +157,7 @@ def nested_cv(X,y,models,SEED):
     """Nested cross-validation procedure for model selection"""
     metrics_name = ['r2', 'neg_mean_absolute_error', 'neg_root_mean_squared_error']
     metrics = [r2_score, mean_absolute_error, mean_squared_error]
-    file_output = open(y.name.split('_')[0]+'_'+TRAINING_OPTION+'.txt', 'w')
+    file_output = open('results/'+y.name.split('_')[0]+'_'+TRAINING_OPTION+'.txt', 'w')
     stats = {}
     for m_i in models:
         # stats = []
@@ -185,5 +209,5 @@ for target in TARGETS:
 pd.DataFrame.from_dict({(i,j): results[i][j] 
                            for i in results.keys() 
                            for j in results[i].keys()},
-                       orient='index').to_csv('results_'+TRAINING_OPTION+'_dataset.csv')
+                       orient='index').to_csv('results/results_'+TRAINING_OPTION+'_dataset.csv')
 # %%
