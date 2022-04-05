@@ -15,50 +15,21 @@ from sklearn.model_selection import GridSearchCV, KFold
 from xgboost.sklearn import XGBRegressor
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, DotProduct, Matern, RationalQuadratic, WhiteKernel
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
-import warnings
-#%%
-warnings.filterwarnings("ignore")
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import f_regression
+from sklearn.feature_selection import mutual_info_regression
+# %%
 # Load dataset
 Dataset = pd.read_csv("data/UD_867_formulation_training.csv")
-TARGETS = ['Water_Absorption_%','Hardness','Thermal_Conductivity_(mW/m.K)']
-NR_FEATURES = ['Clarifier_1','Clarifier_2','Clarifier_3',
-                'Polymer_3','UV_absorber_1','UV_absorber_2',
-                'Filler_2','Filler_3']
-TRAINING_OPTION = 'partial' # if remove 'partial'
-
-# %%
+TARGETS = ['Water_Absorption_%', 'Hardness', 'Thermal_Conductivity_(mW/m.K)']
 # Reproducibility
 SEED = 12345
-# Select only features from dataset
-X_train = Dataset.drop(columns=['name']+TARGETS)
-# add entropy as a feature
-X_train['entropy']=scipy.stats.entropy(X_train, axis=1)
-# removing some features may help?
-if TRAINING_OPTION == 'partial':
-    X_train = X_train.drop(columns=NR_FEATURES)
-# Select only targets from dataset
-Y_train = Dataset[TARGETS]
-# Standardization
-mu = X_train.mean(axis=0)
-sigma = X_train.std(axis=0)
-X_train = (X_train - mu)/sigma
-y_train = Y_train[TARGETS[0]]
-
+# Training options
+FEATURE_SELECTION = True # mutual information regression
+ADD_ENTROPY = True
+K = 24
 # %%
 models =    {
-    # Neural network regressor
-    'NeuralNetRegressor':{
-            'input_dim': [X_train.shape[1]],
-            'initializer': ['normal', 'uniform'],
-            'activation': ['relu', 'sigmoid'],
-            'optimizer': ['adam', 'rmsprop'],
-            'loss': ['mse', 'mae'],
-            'batch_size': [10, 20],
-            'epochs': [5, 10],
-    },
     # Similarity-based regressors
     'KNeighborsRegressor':{
             # 'n_neighbors': np.arange(1,3,2),
@@ -75,7 +46,7 @@ models =    {
     # Tree-based regressors
     'XGBRegressor':{
             'learning_rate': np.arange(0.025,0.150,0.025),
-            'gamma':np.arange(0.05,0.45,0.05),
+            # 'gamma':np.arange(0.05,0.45,0.05),
             # 'max_depth':np.arange(2,14,2),
             # 'min_child_weight':np.arange(1,8,1),
             'n_estimators':np.arange(10,80,5),
@@ -110,20 +81,10 @@ models =    {
 
             }
 # %%
-def NeuralNetRegressor(input_dim=29, initializer='uniform', activation='relu', optimizer='adam', loss='mse'):
-    model = Sequential()
-    model.add(Dense(units=10, input_dim=input_dim, kernel_initializer=initializer, activation=activation))
-    model.add(Dense(units=10, kernel_initializer=initializer, activation=activation))
-    model.add(Dense(1, kernel_initializer=initializer))
-    model.compile(loss=loss, optimizer=optimizer)
-    return model
-# %%
 def set_model(name):
     """Initialization module for models to be evaluated"""
-    if name=='NeuralNetRegressor':
-        model = KerasRegressor(NeuralNetRegressor, verbose=0)
     # Similarity-based regressors
-    elif name=='KNeighborsRegressor':
+    if name=='KNeighborsRegressor':
         model = KNeighborsRegressor()
     elif name=='GaussianProcessRegressor':
         model = GaussianProcessRegressor()    
@@ -155,9 +116,9 @@ def restart_kernels(init_length_scale=1.0):
 # %%
 def nested_cv(X,y,models,SEED):
     """Nested cross-validation procedure for model selection"""
-    metrics_name = ['r2', 'neg_mean_absolute_error', 'neg_root_mean_squared_error']
+    metrics_name = ['r2', 'MAE', 'RMSE']
     metrics = [r2_score, mean_absolute_error, mean_squared_error]
-    file_output = open('results/'+y.name.split('_')[0]+'_'+TRAINING_OPTION+'.txt', 'w')
+    file_output = open('results/{}_FS-{}_AE-{}.txt'.format(y.name.split('_')[0], FEATURE_SELECTION, ADD_ENTROPY),'w')
     stats = {}
     for m_i in models:
         # stats = []
@@ -199,15 +160,46 @@ def nested_cv(X,y,models,SEED):
     file_output.close()
     return stats
 # %%
+def std_features(X):
+    """Standardization function"""
+    # Standardization
+    mu = X.mean(axis=0)
+    sigma = X.std(axis=0)
+    return (X - mu)/sigma
+# %%
+# feature selection
+def select_features(X, y, k):
+    """Feature selection function"""
+    # configure to select all features
+    fs = SelectKBest(score_func=mutual_info_regression, k=k)
+    # learn relationship from training data
+    fs.fit(X, y)
+    # take features out
+    X_fs = pd.DataFrame(fs.transform(X), columns=fs.feature_names_in_[fs.get_support()])
+    return X_fs
+# %%
+# Select only features from dataset
+X_train = Dataset.drop(columns=['name']+TARGETS)
+# add entropy as a feature
+if ADD_ENTROPY:
+    X_train['entropy']=scipy.stats.entropy(X_train, axis=1)
+# Select only targets from dataset
+Y_train = Dataset[TARGETS]
+# Standardization
+X_train = std_features(X_train)
 # Main loop to evaluate multiple models
 results = {}
 for target in TARGETS:
     y_train = Y_train[target]
+    if FEATURE_SELECTION:
+        X_train = select_features(X_train, y_train, K)
     results[target]=nested_cv(X_train,y_train,models,SEED)
 
-# %%
+RESULTS_PATH = 'results/summary_results_FS-{}_AE-{}.csv'.format(FEATURE_SELECTION, ADD_ENTROPY)
 pd.DataFrame.from_dict({(i,j): results[i][j] 
                            for i in results.keys() 
                            for j in results[i].keys()},
-                       orient='index').to_csv('results/results_'+TRAINING_OPTION+'_dataset.csv')
+                       orient='index').to_csv(RESULTS_PATH)
+# %%
+
 # %%
