@@ -1,0 +1,70 @@
+predictor:KNeighborsRegressor, metrics:[0.4791861768974852, 8.458603473333318, 115.52490503011755], best params:{'metric': 'minkowski', 'n_neighbors': 9, 'p': 1, 'weights': 'uniform'}
+predictor:KNeighborsRegressor, metrics:[0.0676896207783394, 11.86224749492062, 210.48230123833312], best params:{'metric': 'minkowski', 'n_neighbors': 9, 'p': 1, 'weights': 'uniform'}
+predictor:KNeighborsRegressor, metrics:[0.6961678328472847, 12.160348047142858, 322.4958564493144], best params:{'metric': 'minkowski', 'n_neighbors': 7, 'p': 1, 'weights': 'uniform'}
+predictor:KNeighborsRegressor, metrics:[0.5951095313343581, 14.792852813626718, 340.40872724098415], best params:{'metric': 'minkowski', 'n_neighbors': 3, 'p': 1, 'weights': 'distance'}
+predictor:KNeighborsRegressor, metrics:[0.4493152495209045, 15.243343029523805, 298.2304664696509], best params:{'metric': 'minkowski', 'n_neighbors': 3, 'p': 2, 'weights': 'uniform'}
+predictor:KNeighborsRegressor, metrics:[0.7205622201863647, 7.519398610498968, 103.41236976509016], best params:{'metric': 'minkowski', 'n_neighbors': 7, 'p': 1, 'weights': 'distance'}
+predictor:KNeighborsRegressor, metrics:[0.3046405767067649, 17.74289768257144, 549.0918956857165], best params:{'metric': 'minkowski', 'n_neighbors': 5, 'p': 1, 'weights': 'uniform'}
+predictor:KNeighborsRegressor, metrics:[0.19577607037325984, 16.589220267714285, 468.76247583034916], best params:{'metric': 'minkowski', 'n_neighbors': 5, 'p': 1, 'weights': 'uniform'}
+predictor:KNeighborsRegressor, metrics:[0.7780874770573833, 8.092531275714284, 97.70393609486305], best params:{'metric': 'chebyshev', 'n_neighbors': 3, 'p': 1, 'weights': 'uniform'}
+predictor:KNeighborsRegressor, metrics:[0.340024835507471, 9.869762243469395, 195.10525345559162], best params:{'metric': 'minkowski', 'n_neighbors': 7, 'p': 1, 'weights': 'uniform'}
+predictor:GaussianProcessRegressor, metrics:[0.6590357078366684, 7.874607345046922, 75.63137866845136], best params:{'kernel': 1**2 * RationalQuadratic(alpha=1, length_scale=1) + 1**2 * WhiteKernel(noise_level=1), 'n_restarts_optimizer': 5, 'random_state': 12345}
+predictor:GaussianProcessRegressor, metrics:[-0.06603861327833549, 14.06879336639544, 240.67334820306414], best params:{'kernel': 1**2 * DotProduct(sigma_0=1) + 1**2 * WhiteKernel(noise_level=1), 'n_restarts_optimizer': 5, 'random_state': 12345}
+predictor:GaussianProcessRegressor, metrics:[0.642055880056912, 13.878879246949662, 379.93177813862224], best params:{'kernel': 1**2 * RationalQuadratic(alpha=1, length_scale=1) + 1**2 * WhiteKernel(noise_level=1), 'n_restarts_optimizer': 5, 'random_state': 12345}
+predictor:GaussianProcessRegressor, metrics:[0.7058634430530043, 11.687024383481434, 247.2931786103775], best params:{'kernel': 1**2 * RationalQuadratic(alpha=1, length_scale=1) + 1**2 * WhiteKernel(noise_level=1), 'n_restarts_optimizer': 5, 'random_state': 12345}
+predictor:GaussianProcessRegressor, metrics:[0.07688782373470326, 16.822909099380198, 499.9233675744662], best params:{'kernel': 1**2 * DotProduct(sigma_0=1) + 1**2 * WhiteKernel(noise_level=1), 'n_restarts_optimizer': 5, 'random_state': 12345}
+predictor:GaussianProcessRegressor, metrics:[0.814865866972726, 6.502898071222004, 68.51313889454849], best params:{'kernel': 1**2 * DotProduct(sigma_0=1) + 1**2 * WhiteKernel(noise_level=1), 'n_restarts_optimizer': 5, 'random_state': 12345}
+predictor:GaussianProcessRegressor, metrics:[0.49401885250693955, 16.61242340201542, 399.54897877473206], best params:{'kernel': 1**2 * DotProduct(sigma_0=1) + 1**2 * WhiteKernel(noise_level=1), 'n_restarts_optimizer': 5, 'random_state': 12345}
+predictor:GaussianProcessRegressor, metrics:[0.30621248644726273, 16.259630001022725, 404.3917876257502], best params:{'kernel': 1**2 * DotProduct(sigma_0=1) + 1**2 * WhiteKernel(noise_level=1), 'n_restarts_optimizer': 5, 'random_state': 12345}
+predictor:GaussianProcessRegressor, metrics:[0.7944502887740519, 8.000221987305013, 90.49969593257592], best params:{'kernel': 1**2 * RationalQuadratic(alpha=1, length_scale=1) + 1**2 * WhiteKernel(noise_level=1), 'n_restarts_optimizer': 5, 'random_state': 12345}
+predictor:GaussianProcessRegressor, metrics:[0.5082582120237481, 7.783659115296694, 145.37123719130267], best params:{'kernel': 1**2 * DotProduct(sigma_0=1) + 1**2 * WhiteKernel(noise_level=1), 'n_restarts_optimizer': 5, 'random_state': 12345}
+predictor:XGBRegressor, metrics:[0.3688878815242932, 9.19429728947754, 139.99084570363104], best params:{'learning_rate': 0.07500000000000001, 'n_estimators': 55, 'reg_alpha': 10.0, 'reg_lambda': 0.1}
+predictor:XGBRegressor, metrics:[0.6671902042256634, 7.062682037890623, 75.13653526814082], best params:{'learning_rate': 0.125, 'n_estimators': 55, 'reg_alpha': 0.001, 'reg_lambda': 0.01}
+predictor:XGBRegressor, metrics:[0.66228809497477, 12.323517625055809, 358.4567462519504], best params:{'learning_rate': 0.125, 'n_estimators': 75, 'reg_alpha': 100.0, 'reg_lambda': 1.0}
+predictor:XGBRegressor, metrics:[0.7913920046485945, 11.264700702618587, 175.38566028460085], best params:{'learning_rate': 0.07500000000000001, 'n_estimators': 75, 'reg_alpha': 0.1, 'reg_lambda': 1.0}
+predictor:XGBRegressor, metrics:[0.05042545325161529, 17.80822639884766, 514.2544074047831], best params:{'learning_rate': 0.125, 'n_estimators': 75, 'reg_alpha': 1.0, 'reg_lambda': 10.0}
+predictor:XGBRegressor, metrics:[0.6400324518613139, 8.780445960772886, 133.21426049254023], best params:{'learning_rate': 0.125, 'n_estimators': 40, 'reg_alpha': 10.0, 'reg_lambda': 0.01}
+predictor:XGBRegressor, metrics:[0.31065147321020137, 17.98966466856585, 544.3453797900792], best params:{'learning_rate': 0.1, 'n_estimators': 45, 'reg_alpha': 10.0, 'reg_lambda': 0.01}
+predictor:XGBRegressor, metrics:[-0.4900532596622551, 23.979167561745253, 868.5156327573377], best params:{'learning_rate': 0.1, 'n_estimators': 65, 'reg_alpha': 10.0, 'reg_lambda': 10.0}
+predictor:XGBRegressor, metrics:[0.846697021225411, 6.44155530482701, 67.49643617551837], best params:{'learning_rate': 0.125, 'n_estimators': 45, 'reg_alpha': 0.001, 'reg_lambda': 0.1}
+predictor:XGBRegressor, metrics:[0.7963290544048617, 6.017894715655694, 60.210252748577936], best params:{'learning_rate': 0.1, 'n_estimators': 45, 'reg_alpha': 10.0, 'reg_lambda': 1.0}
+predictor:RandomForestRegressor, metrics:[0.5651589132187648, 8.041556208083314, 96.45476564800637], best params:{'criterion': 'absolute_error', 'max_features': 'sqrt', 'n_estimators': 45, 'random_state': 12345}
+predictor:RandomForestRegressor, metrics:[0.2946855348738262, 10.894244798257164, 159.23475167184105], best params:{'criterion': 'absolute_error', 'max_features': 'auto', 'n_estimators': 50, 'random_state': 12345}
+predictor:RandomForestRegressor, metrics:[0.30025018031267037, 16.405581344714296, 742.7337912081305], best params:{'criterion': 'absolute_error', 'max_features': 'sqrt', 'n_estimators': 10, 'random_state': 12345}
+predictor:RandomForestRegressor, metrics:[0.7999030966139623, 10.582710617333333, 168.23002139561927], best params:{'criterion': 'squared_error', 'max_features': 'auto', 'n_estimators': 45, 'random_state': 12345}
+predictor:RandomForestRegressor, metrics:[0.10549782954439091, 18.563863938489792, 484.4292479880796], best params:{'criterion': 'absolute_error', 'max_features': 'sqrt', 'n_estimators': 35, 'random_state': 12345}
+predictor:RandomForestRegressor, metrics:[0.7049891527645715, 8.175526815714294, 109.17554111462353], best params:{'criterion': 'absolute_error', 'max_features': 'auto', 'n_estimators': 15, 'random_state': 12345}
+predictor:RandomForestRegressor, metrics:[0.5356650601145969, 15.793426680552376, 366.6629714562318], best params:{'criterion': 'squared_error', 'max_features': 'auto', 'n_estimators': 75, 'random_state': 12345}
+predictor:RandomForestRegressor, metrics:[0.5440648041207201, 12.861545889000004, 265.75348402995365], best params:{'criterion': 'absolute_error', 'max_features': 'auto', 'n_estimators': 10, 'random_state': 12345}
+predictor:RandomForestRegressor, metrics:[0.9098832657363296, 5.720988273186821, 39.67671372855416], best params:{'criterion': 'squared_error', 'max_features': 'auto', 'n_estimators': 65, 'random_state': 12345}
+predictor:RandomForestRegressor, metrics:[0.8509548059697797, 5.333227779238086, 44.06150704165346], best params:{'criterion': 'absolute_error', 'max_features': 'auto', 'n_estimators': 75, 'random_state': 12345}
+predictor:Ridge, metrics:[0.45799606819458816, 9.067356406672824, 120.2252128692937], best params:{'alpha': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:Ridge, metrics:[0.16719482495890747, 12.51842036083811, 188.0175890267182], best params:{'alpha': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:Ridge, metrics:[0.5535825809192829, 15.497494704698317, 473.83978217147023], best params:{'alpha': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:Ridge, metrics:[0.7420521335452934, 11.634055501135336, 216.86779934275393], best params:{'alpha': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:Ridge, metrics:[-0.0041307005830608645, 16.359586973439175, 543.7999998562725], best params:{'alpha': 0.001, 'max_iter': 50000, 'random_state': 12345}
+predictor:Ridge, metrics:[0.9261171047362753, 4.053277581883953, 27.342062656750738], best params:{'alpha': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:Ridge, metrics:[0.46147069832017473, 16.84065503845728, 425.2506908459368], best params:{'alpha': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:Ridge, metrics:[0.39311303179551516, 14.714068872040823, 353.73958332319893], best params:{'alpha': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:Ridge, metrics:[0.8080585028519645, 7.588142802324798, 84.50825362457515], best params:{'alpha': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:Ridge, metrics:[0.47109577269479086, 8.32484550061176, 156.357388692745], best params:{'alpha': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:Lasso, metrics:[0.43230832595179125, 9.60029220460112, 125.92316836010474], best params:{'alpha': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:Lasso, metrics:[0.29776742788344945, 11.365882400339391, 158.53897058080852], best params:{'alpha': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:Lasso, metrics:[0.5848751476034637, 14.865566800194745, 440.6249873461423], best params:{'alpha': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:Lasso, metrics:[0.7651305104959346, 11.387226196354364, 197.4648211732604], best params:{'alpha': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:Lasso, metrics:[0.10040731529481528, 16.932833192921187, 487.18608198048736], best params:{'alpha': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:Lasso, metrics:[0.9299072249047927, 3.7213795668876952, 25.939441620388912], best params:{'alpha': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:Lasso, metrics:[0.39798580529246097, 17.32648262723824, 475.3816577851626], best params:{'alpha': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:Lasso, metrics:[0.39517165161113277, 14.266968761386451, 352.5396641389858], best params:{'alpha': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:Lasso, metrics:[0.7764063340287043, 8.538165893396412, 98.4441119482233], best params:{'alpha': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:Lasso, metrics:[0.4741244002759949, 8.229898374591315, 155.4620502260199], best params:{'alpha': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:ElasticNet, metrics:[0.42524754673154763, 9.46265145058235, 127.48936305900526], best params:{'alpha': 0.01, 'l1_ratio': 0.5, 'max_iter': 50000, 'random_state': 12345}
+predictor:ElasticNet, metrics:[0.10381700863200427, 12.990127569850754, 202.32603064149868], best params:{'alpha': 0.001, 'l1_ratio': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:ElasticNet, metrics:[0.5533549146477181, 15.497873527799172, 474.0814334420416], best params:{'alpha': 0.001, 'l1_ratio': 0.30000000000000004, 'max_iter': 50000, 'random_state': 12345}
+predictor:ElasticNet, metrics:[0.7485228787365087, 11.908690663167343, 211.427567217504], best params:{'alpha': 0.001, 'l1_ratio': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:ElasticNet, metrics:[0.011300320614661019, 16.536622540190184, 535.4431302572942], best params:{'alpha': 0.001, 'l1_ratio': 0.9, 'max_iter': 50000, 'random_state': 12345}
+predictor:ElasticNet, metrics:[0.8960360515962315, 4.917670393716942, 38.474247403982076], best params:{'alpha': 0.001, 'l1_ratio': 0.1, 'max_iter': 50000, 'random_state': 12345}
+predictor:ElasticNet, metrics:[0.36769269726731, 17.879031126072153, 499.30266835112974], best params:{'alpha': 0.01, 'l1_ratio': 0.7000000000000001, 'max_iter': 50000, 'random_state': 12345}
+predictor:ElasticNet, metrics:[0.3989281494952883, 14.64049893642048, 350.3500933195183], best params:{'alpha': 0.01, 'l1_ratio': 0.8, 'max_iter': 50000, 'random_state': 12345}
+predictor:ElasticNet, metrics:[0.8081447156603468, 7.643551007537659, 84.47029573644404], best params:{'alpha': 0.01, 'l1_ratio': 0.8, 'max_iter': 50000, 'random_state': 12345}
+predictor:ElasticNet, metrics:[0.4458425315675911, 8.893933978854978, 163.8228817533604], best params:{'alpha': 0.01, 'l1_ratio': 0.7000000000000001, 'max_iter': 50000, 'random_state': 12345}

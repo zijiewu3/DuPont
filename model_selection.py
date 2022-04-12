@@ -2,6 +2,7 @@
 """Gaussian Process applied to DuPont dataset"""
 #%%
 # Import libraries
+from re import S
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -18,16 +19,21 @@ from sklearn.gaussian_process.kernels import RBF, DotProduct, Matern, RationalQu
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import f_regression
 from sklearn.feature_selection import mutual_info_regression
-# %%
+from itertools import product
+#%%
 # Load dataset
 Dataset = pd.read_csv("data/UD_867_formulation_training.csv")
 TARGETS = ['Water_Absorption_%', 'Hardness', 'Thermal_Conductivity_(mW/m.K)']
 # Reproducibility
 SEED = 12345
+# Select only features from dataset
+X_train = Dataset.drop(columns=['name']+TARGETS)
 # Training options
-FEATURE_SELECTION = True # mutual information regression
-ADD_ENTROPY = True
-K = 24
+# FEATURE_SELECTION = False # mutual information regression
+# ADD_ENTROPY = True
+# ADD_VARIANCE = True
+# STANDARDIZER = True
+K = 23 # number of features selected
 # %%
 models =    {
     # Similarity-based regressors
@@ -114,11 +120,12 @@ def restart_kernels(init_length_scale=1.0):
                 1.0*RationalQuadratic()+1.0*WhiteKernel()]
     return kernels
 # %%
-def nested_cv(X,y,models,SEED):
+def nested_cv(X,y,models,path,SEED):
     """Nested cross-validation procedure for model selection"""
     metrics_name = ['r2', 'MAE', 'RMSE']
     metrics = [r2_score, mean_absolute_error, mean_squared_error]
-    file_output = open('results/{}_FS-{}_AE-{}.txt'.format(y.name.split('_')[0], FEATURE_SELECTION, ADD_ENTROPY),'w')
+    # file_output = open('results/{}_FS-{}_AE-{}.txt'.format(y.name.split('_')[0], FEATURE_SELECTION, ADD_ENTROPY),'w')
+    file_output = open(path,'w')
     stats = {}
     for m_i in models:
         # stats = []
@@ -156,7 +163,8 @@ def nested_cv(X,y,models,SEED):
             # print('predictor:%s, metrics:%s, best params:%s',acc,' best params:',result.best_params_)
 	        # print('>acc=%.3f, est=%.3f, cfg=%s' % (acc, result.best_score_, result.best_params_))
         outer_df = pd.DataFrame(outer_results)
-        stats[m_i] = dict(zip(metrics_name,list(zip(outer_df.mean().values,outer_df.std().values))))
+        stats[m_i] = dict(zip(metrics_name,list(zip(outer_df.mean().round(3).values,
+                                                    outer_df.std().round(3).values))))
     file_output.close()
     return stats
 # %%
@@ -171,35 +179,45 @@ def std_features(X):
 def select_features(X, y, k):
     """Feature selection function"""
     # configure to select all features
-    fs = SelectKBest(score_func=mutual_info_regression, k=k)
+    fs = SelectKBest(score_func=f_regression, k=k)
     # learn relationship from training data
     fs.fit(X, y)
     # take features out
     X_fs = pd.DataFrame(fs.transform(X), columns=fs.feature_names_in_[fs.get_support()])
     return X_fs
 # %%
-# Select only features from dataset
-X_train = Dataset.drop(columns=['name']+TARGETS)
-# add entropy as a feature
-if ADD_ENTROPY:
-    X_train['entropy']=scipy.stats.entropy(X_train, axis=1)
-# Select only targets from dataset
-Y_train = Dataset[TARGETS]
-# Standardization
-X_train = std_features(X_train)
-# Main loop to evaluate multiple models
-results = {}
-for target in TARGETS:
-    y_train = Y_train[target]
-    if FEATURE_SELECTION:
-        X_train = select_features(X_train, y_train, K)
-    results[target]=nested_cv(X_train,y_train,models,SEED)
 
-RESULTS_PATH = 'results/summary_results_FS-{}_AE-{}.csv'.format(FEATURE_SELECTION, ADD_ENTROPY)
-pd.DataFrame.from_dict({(i,j): results[i][j] 
-                           for i in results.keys() 
-                           for j in results[i].keys()},
-                       orient='index').to_csv(RESULTS_PATH)
-# %%
+# Main loop
+STANDARDIZER = True
+for ADD_SQSUM, ADD_ENTROPY, FEATURE_SELECTION in product([False, True], repeat=3):
+    # add entropy as a feature
+    if ADD_SQSUM:
+        X_train['sqsum']=np.sum(np.square(X_train),axis=1)
+    # add entropy as a feature
+    if ADD_ENTROPY:
+        X_train['entropy']=scipy.stats.entropy(X_train, axis=1)
+    # Select only targets from dataset
+    Y_train = Dataset[TARGETS]
+    # Standardization
+    if STANDARDIZER:
+        X_train = std_features(X_train)
 
+    # Main loop to evaluate multiple models
+    results = {}
+    for target in TARGETS:
+        y_train = Y_train[target]
+        path = 'results/{}_AS-{}_AE-{}_STD-{}_FS-{}.txt'.format(y_train.name.split('_')[0], 
+                                                    ADD_SQSUM, ADD_ENTROPY,
+                                                    STANDARDIZER, FEATURE_SELECTION)
+        if FEATURE_SELECTION:
+            X_train = select_features(X_train, y_train, K)
+        results[target]=nested_cv(X_train,y_train,models,path,SEED)
+
+    RESULTS_PATH = 'results/summary_results_AS-{}_AE-{}_STD-{}_FS-{}.csv'.format(
+                                                    ADD_SQSUM, ADD_ENTROPY,
+                                                    STANDARDIZER, FEATURE_SELECTION)
+    pd.DataFrame.from_dict({(i,j): results[i][j] 
+                            for i in results.keys() 
+                            for j in results[i].keys()},
+                        orient='index').to_csv(RESULTS_PATH)
 # %%
