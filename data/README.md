@@ -1,0 +1,1 @@
+Data Provided by DuPont about polymer blend formulations. Each row is a blend formulation instance with compositions of 25 (aliased) components and 3 properties (water absorption, Hardness, Thermal conductivity).
